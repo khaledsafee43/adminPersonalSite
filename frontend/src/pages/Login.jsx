@@ -1,6 +1,178 @@
-import { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { ArrowRight, Eye, EyeOff, LayoutDashboard, LockKeyhole, Mail, ShieldCheck } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { getErrorMessage } from '../lib/api';
-export default function Login(){const {user,login}=useAuth();const navigate=useNavigate();const [email,setEmail]=useState('');const [password,setPassword]=useState('');const [show,setShow]=useState(false);const [loading,setLoading]=useState(false);const [error,setError]=useState('');if(user)return <Navigate to="/" replace/>;async function submit(e){e.preventDefault();setLoading(true);setError('');try{await login(email,password);navigate('/')}catch(e){setError(getErrorMessage(e))}finally{setLoading(false)}}return <div className="login-shell"><div className="login-decoration"/><div className="login-card"><div className="mb-8 flex items-center gap-3"><div className="grid h-12 w-12 place-items-center rounded-2xl bg-accent text-white shadow-glow"><LayoutDashboard size={24}/></div><div><p className="text-lg font-semibold text-white">Studio<span className="text-accent">Panel</span></p><p className="text-xs text-slate-500">PORTFOLIO MANAGEMENT</p></div></div><div className="mb-7"><span className="badge badge-purple"><ShieldCheck size={12}/> Secure administrator access</span><h1 className="mt-4 text-3xl font-semibold tracking-tight text-white">Welcome back</h1><p className="mt-2 text-sm leading-6 text-slate-400">Sign in to manage your portfolio content and client requests.</p></div><form onSubmit={submit} className="space-y-5"><label className="block"><span className="mb-2 block text-sm font-medium text-slate-300">Email address</span><div className="relative"><Mail size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500"/><input className="field h-12 pl-10" type="email" required autoComplete="username" value={email} onChange={e=>setEmail(e.target.value)} placeholder="admin@example.com"/></div></label><label className="block"><span className="mb-2 block text-sm font-medium text-slate-300">Password</span><div className="relative"><LockKeyhole size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500"/><input className="field h-12 pl-10 pr-11" type={show?'text':'password'} required autoComplete="current-password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Enter your password"/><button type="button" onClick={()=>setShow(!show)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-200" aria-label={show?'Hide password':'Show password'}>{show?<EyeOff size={17}/>:<Eye size={17}/>}</button></div></label>{error&&<div className="alert-error">{error}</div>}<button disabled={loading} className="btn-primary h-12 w-full justify-center">{loading?'Signing in…':'Sign in to dashboard'} {!loading&&<ArrowRight size={17}/>}</button></form><div className="mt-7 border-t border-line pt-5 text-center text-xs leading-5 text-slate-500">Admin credentials come from your backend <code>.env</code> file.<br/>Never share your password or commit secrets.</div></div><p className="absolute bottom-5 text-xs text-slate-600">© {new Date().getFullYear()} StudioPanel · Private workspace</p></div>}
+import { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
+import {
+  ArrowRight,
+  Eye,
+  EyeOff,
+  LayoutDashboard,
+  LockKeyhole,
+  Mail,
+  ShieldCheck,
+} from "lucide-react";
+
+import { useAuth } from "../context/AuthContext";
+import { getErrorMessage } from "../lib/api";
+
+export default function Login() {
+  const { user, login } = useAuth();
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
+
+  async function submit(e) {
+    e.preventDefault();
+
+    setLoading(true);
+    setError("");
+
+    try {
+      await login(email.trim(), password);
+      navigate("/", { replace: true });
+    } catch (error) {
+      setError(getErrorMessage(error));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="login-shell">
+      <div className="login-decoration" />
+
+      <div className="login-card">
+        {/* Logo */}
+        <div className="mb-8 flex items-center gap-3">
+          <div className="grid h-12 w-12 place-items-center rounded-2xl bg-accent text-white shadow-glow">
+            <LayoutDashboard size={24} />
+          </div>
+
+          <div>
+            <p className="text-lg font-semibold text-white">
+              Studio<span className="text-accent">Panel</span>
+            </p>
+
+            <p className="text-xs text-slate-500">
+              PORTFOLIO MANAGEMENT
+            </p>
+          </div>
+        </div>
+
+        {/* Heading */}
+        <div className="mb-7">
+          <span className="badge badge-purple">
+            <ShieldCheck size={12} />
+            Secure administrator access
+          </span>
+
+          <h1 className="mt-4 text-3xl font-semibold tracking-tight text-white">
+            Welcome back
+          </h1>
+
+          <p className="mt-2 text-sm leading-6 text-slate-400">
+            Sign in to manage your portfolio content and client requests.
+          </p>
+        </div>
+
+        {/* Login Form */}
+        <form onSubmit={submit} className="space-y-5">
+          {/* Email */}
+          <label className="block">
+            <span className="mb-2 block text-sm font-medium text-slate-300">
+              Email address
+            </span>
+
+            <div className="relative">
+              <Mail
+                size={17}
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500"
+              />
+
+              <input
+                className="field h-12 pl-10"
+                type="email"
+                required
+                autoComplete="username"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="admin@example.com"
+              />
+            </div>
+          </label>
+
+          {/* Password */}
+          <label className="block">
+            <span className="mb-2 block text-sm font-medium text-slate-300">
+              Password
+            </span>
+
+            <div className="relative">
+              <LockKeyhole
+                size={17}
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500"
+              />
+
+              <input
+                className="field h-12 pl-10 pr-11"
+                type={show ? "text" : "password"}
+                required
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShow(!show)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-200"
+                aria-label={show ? "Hide password" : "Show password"}
+              >
+                {show ? <EyeOff size={17} /> : <Eye size={17} />}
+              </button>
+            </div>
+          </label>
+
+          {/* Error Message */}
+          {error && (
+            <div className="alert-error" role="alert">
+              {error}
+            </div>
+          )}
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn-primary h-12 w-full justify-center"
+          >
+            {loading ? "Signing in…" : "Sign in to dashboard"}
+
+            {!loading && <ArrowRight size={17} />}
+          </button>
+        </form>
+
+        {/* Security Notice */}
+        <div className="mt-7 border-t border-line pt-5 text-center text-xs leading-5 text-slate-500">
+          Admin credentials come from your backend{" "}
+          <code>.env</code> file.
+          <br />
+          Never share your password or commit secrets.
+        </div>
+      </div>
+
+      {/* Footer */}
+      <p className="absolute bottom-5 text-xs text-slate-600">
+        © {new Date().getFullYear()} StudioPanel · Private workspace
+      </p>
+    </div>
+  );
+}
+
