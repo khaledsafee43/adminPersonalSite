@@ -1,10 +1,11 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL:
-    import.meta.env.VITE_API_URL ||
-    "https://adminpersonalsite.onrender.com/api",
-  timeout: 30000,
+  baseURL: "https://adminpersonalsite.onrender.com/api",
+  timeout: 60000,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 api.interceptors.request.use((config) => {
@@ -26,6 +27,7 @@ api.interceptors.response.use(
     ) {
       localStorage.removeItem("portfolio_admin_token");
       localStorage.removeItem("portfolio_admin_user");
+
       window.dispatchEvent(new Event("admin-session-expired"));
     }
 
@@ -33,7 +35,13 @@ api.interceptors.response.use(
   },
 );
 
-export const getErrorMessage = (error) =>
-  error.response?.data?.message || error.message || "Something went wrong";
+export const getErrorMessage = (error) => {
+  return (
+    error.response?.data?.message ||
+    error.response?.data?.error ||
+    error.message ||
+    "Something went wrong"
+  );
+};
 
 export default api;
